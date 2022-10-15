@@ -17,12 +17,12 @@ install_3proxy() {
     cd /3proxy
     URL="https://github.com/z3APA3A/3proxy/archive/0.9.2.tar.gz"
     wget -qO- $URL | bsdtar -xvf-
-    cd 3proxy-0.9.4
+    cd 3proxy-0.9.2
     make -f Makefile.Linux
     mkdir -p /usr/local/etc/3proxy/{bin,logs,stat}
-    mv /3proxy/3proxy-0.9.4/bin/3proxy /usr/local/etc/3proxy/bin/
-    wget https://raw.githubusercontent.com/xlandgroup/ipv4-ipv6-proxy/master/scripts/3proxy.service-Centos8 --output-document=/3proxy/3proxy-0.9.4/scripts/3proxy.service2
-    cp /3proxy/3proxy-0.9.4/scripts/3proxy.service2 /usr/lib/systemd/system/3proxy.service
+    mv /3proxy/3proxy-0.9.2/bin/3proxy /usr/local/etc/3proxy/bin/
+    wget https://raw.githubusercontent.com/xlandgroup/ipv4-ipv6-proxy/master/scripts/3proxy.service-Centos8 --output-document=/3proxy/3proxy-0.9.2/scripts/3proxy.service2
+    cp /3proxy/3proxy-0.9.2/scripts/3proxy.service2 /usr/lib/systemd/system/3proxy.service
     systemctl link /usr/lib/systemd/system/3proxy.service
     systemctl daemon-reload
 #    systemctl enable 3proxy
@@ -43,7 +43,7 @@ install_3proxy() {
 gen_3proxy() {
     cat <<EOF
 daemon
-maxconn 1000
+maxconn 10000
 nserver 8.8.8.8
 nserver 8.8.4.4
 nserver 2001:4860:4860::8888
@@ -130,7 +130,7 @@ systemctl start NetworkManager.service
 ifup ens3
 bash ${WORKDIR}/boot_iptables.sh
 bash ${WORKDIR}/boot_ifconfig.sh
-ulimit -n 10048
+ulimit -n 65536
 /usr/local/etc/3proxy/bin/3proxy /usr/local/etc/3proxy/3proxy.cfg &
 EOF
 
