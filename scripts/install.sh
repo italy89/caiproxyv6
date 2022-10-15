@@ -28,11 +28,13 @@ install_3proxy() {
 #    systemctl enable 3proxy
     echo "* hard nofile 999999" >>  /etc/security/limits.conf
     echo "* soft nofile 999999" >>  /etc/security/limits.conf
-    echo "net.ipv6.conf.ens3.proxy_ndp=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.all.proxy_ndp=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.default.forwarding=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.all.forwarding=1" >> /etc/sysctl.conf
-    echo "net.ipv6.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
+    echo "net.ipv6.conf.ens3.proxy_ndp=0" >> /etc/sysctl.conf
+    echo "net.ipv6.conf.all.proxy_ndp=0" >> /etc/sysctl.conf
+    echo "net.ipv6.conf.default.forwarding=0" >> /etc/sysctl.conf
+    echo "net.ipv6.conf.all.forwarding=0" >> /etc/sysctl.conf
+    echo "net.ipv6.ip_nonlocal_bind = 0" >> /etc/sysctl.conf
+    echo "net.ipv6.conf.all.disable_ipv6 = 0" >> /etc/sysctl.conf
+    echo "net.ipv6.conf.default.disable_ipv6 = 0" >> /etc/sysctl.conf
     sysctl -p
     systemctl stop firewalld
     systemctl disable firewalld
@@ -43,7 +45,7 @@ install_3proxy() {
 gen_3proxy() {
     cat <<EOF
 daemon
-maxconn 20000
+maxconn 10000
 nserver 8.8.8.8
 nserver 8.8.4.4
 nserver 2001:4860:4860::8888
