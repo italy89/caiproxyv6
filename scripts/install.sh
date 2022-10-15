@@ -35,7 +35,12 @@ install_3proxy() {
     echo "net.ipv6.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
     echo "net.ipv6.conf.eth0.disable_ipv6 = 0" >> /etc/sysctl.conf
     echo "net.ipv6.conf.default.disable_ipv6 = 0" >> /etc/sysctl.conf
+    echo "GRUB_SERIAL_COMMAND="serial --speed=115200"" >> /etc/default/grub
+    echo "GRUB_CMDLINE_LINUX="ipv6.disable=0 console=tty0 crashkernel=auto console=ttyS0,115200"" >> /etc/default/grub
     sysctl -p
+    grub2-mkconfig -o /boot/grub2/grub.cfg
+    sysctl net.ipv6.conf.eth0.disable_ipv6=0
+    sysctl net.ipv6.conf.default.disable_ipv6=0
     systemctl stop firewalld
     systemctl disable firewalld
     cd $WORKDIR
